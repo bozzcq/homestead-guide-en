@@ -10,13 +10,13 @@ General information
 独特功能
 ********************************************************************************
 
-The blockchain platform is developed for building digital ecosystems. The platform includes an integrated application development environment with a multi-level system of access rights to data, interfaces and smart contracts. The platform is built based on software developed by EGAAS Corporation (EGAAS S.A.).
+区块链平台是为建设数字生态系统而开发的。该平台包括一个集成的应用程序开发环境，具有对数据，接口和智能合同的多级访问权限系统。该平台基于由EGAAS Corporation（EGAAS S.A.）开发的软件构建。
 
-In terms of its structure and functioning, Genesis is fundamentally different from most of the existing blockchain platforms: 
+就其结构和功能而言，Genesis与大多数现有区块链平台截然不同：
 
-* The development and use of blockchain applications is carried out in autonomous software environments , called *ecosystems*. Every ecosystem has its own membership rules, initially established by the ecosystem founder. 
-* Activities in ecosystems are based on creating *registers* and recording/modifying the data involved using *smart contracts*, whereas in most other blockchain platforms activities are based on exchanging transactions or messages between accounts. 
-* Management of access permissions to registers, and relation management between ecosystem members are regulated by a set of rules called *smart laws*.
+*区块链应用程序的开发和使用在自主软件环境中进行，称为* ecosystems *。每个生态系统都有其自己的成员规则，最初由生态系统创始人建立。
+*生态系统中的活动基于创建*注册*和记录/修改使用*智能合约*涉及的数据，而在大多数其他区块链平台中，活动基于交换帐户之间的交易或消息。
+*登记访问权限的管理以及生态系统成员之间的关系管理由一套称为*智慧法则*的规则进行管理。
 
 ********************************************************************************
 Genesis Blockchain Platform
