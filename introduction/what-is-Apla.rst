@@ -19,205 +19,205 @@ General information
 *登记访问权限的管理以及生态系统成员之间的关系管理由一套称为*智慧法则*的规则进行管理。
 
 ********************************************************************************
-Genesis Blockchain Platform
+Genesis 区块链平台
 ********************************************************************************
-Network
+网络
 ==========================
-The Genesis blockchain platform is built based on a peer-to-peer network. Full nodes of the network store the up-to-date version of the blockchain and the database, in which the current state of the platform is recorded. The network users receive data by requesting it from databases of full nodes using the software client (or REST AP commands). New data is sent to the network in the form of transactions signed by users. Such transactions are in essence commands for modification of information in the database. Transactions are aggregated in blocks, which are then added to the blockchain on the network nodes. After a new block is added to the blockchain, each full node processes the transactions in this block, thus making changes to data in its database accordingly.
+Genesis区块链平台是基于对等网络构建的。 网络的完整节点存储区块链和数据库的最新版本，其中记录平台的当前状态。 网络用户通过使用软件客户端（或REST AP命令）从完整节点的数据库请求数据来接收数据。 新数据以用户签署的交易形式发送到网络。 这种交易本质上是修改数据库中的信息的命令。 事务以块的形式聚合，然后添加到网络节点上的区块链中。 将新块添加到区块链后，每个完整节点处理该区块中的事务，从而相应地更改其数据库中的数据。
 
-Validating Nodes
+验证节点
 ==========================
-The network's full nodes that have the right to form blocks, are called Validating Nodes. The number of Validating Nodes is limited and is defined with the count_of_nodes parameter in the platform's configuration settings. 
+网络中有权形成块的完整节点称为验证节点。 验证节点的数量是有限的，并且使用平台配置设置中的count_of_nodes参数进行定义。
 
-The list of Validating Nodes is stored in the full_nodes parameter in the following format: 
+验证节点列表以下列格式存储在full_nodes参数中：
 
-*	[[“host1:port",”-1222","nodepub1"], ["host2:ip","-1222", "nodepub2"]], where 
-*	host1:port – is the address of the host, to which the transactions and new blocks are sent; also, the whole chain of blocks (starting from block #1) can be requested and received from this address
-*	-1222 – the node's account to which the fee for transaction processing is sent; if this account does not exist, the fee will not be charged
-*	nodepub1 – the node's public key used for verification of signatures of blocks, created by this node
+* [[“host1：port”，“ - 1222”，“nodepub1”]，[“host2：ip”，“ - 1222”，“nodepub2”]]，其中
+* host1：port - 是主机的地址，事务和新块被发送到该主机; 也可以从这个地址请求和接收整个块的链（从块＃1开始）
+* -1222 - 发送交易处理费用的节点帐户; 如果此帐户不存在，则不收取费用
+* nodepub1 - 节点的公钥，用于验证由此节点创建的块签名
 
-Transactions
+交易
 ==========================
-A transaction is formed by the software client (or by the contract REST API command) and includes data for execution of a special program controller – contract ("smart contract"), called by a user. Each transaction has the following format: 
+事务由软件客户端（或通过合同REST API命令）形成，并包含用于执行特殊程序控制器 - 合同（“智能合同”）的数据，由用户调用。每笔交易具有以下格式：
 
-* Type - ID of the executed contract,                                   
-* Data - parameters passed to the contract,                           
-* KeyID - ID of the user who sent the transaction,          
-* PublicKey - user's public key (optional),              
-* BinSignatures - transaction signature,                         
-* Time - transaction timestamp,                                
-* EcosystemD - ID of the ecosystem, where the transaction was initiated,          
-* ТokenEcosystem - ID of the ecosystem, the tokens of which should be used for the transaction payments, 
-* MaxSum - maximum transaction fee,
-* PayOver - additional payment for priority processing in the transaction queue.
- 
-A transaction is signed by the private key of an account holder. Both the key and the signing function can be stored in a browser, in the software client, on a SIM card, or on a specialized physical device. In the current implementation, private keys are kept in the Molis software client encrypted by the AES algorithm. Transactions are signed using the ECDSA algorithm.
+*类型 - 执行合约的编号，
+*数据 - 传递给合约的参数，
+* KeyID - 发送交易的用户的ID，
+* PublicKey - 用户的公钥（可选），
+* BinSignatures - 交易签名，
+*时间 - 交易时间戳，
+* EcosystemD - 生态系统的ID，开始交易的地方，
+*Тoken生态系统 - 生态系统的标识，其标记应用于交易支付，
+* MaxSum - 最高交易费用，
+* PayOver - 在交易队列中优先处理的额外付款。
+ 
+交易由账户持有人的私钥签署。密钥和签名功能都可以存储在浏览器，软件客户端，SIM卡或专用物理设备上。在当前的实现中，私钥保存在由AES算法加密的Molis软件客户端中。事务使用ECDSA算法进行签名。
 
-Network Protocol
+网络协议
 ==========================
-A transaction is sent by a user to one of the validating nodes, where it undergoes a basic verification to ensure the correctness of its format and then is added to the transaction queue. This transaction is also sent to other Validating Nodes on the network, where it's also added to the transactions queue. 
+事务由用户发送到其中一个验证节点，在那里进行基本验证以确保其格式的正确性，然后将其添加到事务队列中。这个事务也被发送到网络上的其他验证节点，在那里它也被添加到事务队列中。
 
-The Node, at a particular moment of time that has the right to generate a new block (according to the full_nodes parameter), retrieves transactions from the queue and sends them to the block generator. Simultaneously with the formation of a new block, the processing of transactions which are added to this block is carried out: each transaction is sent to the virtual machine that executes a corresponding contract with parameters, passed in the transaction, resulting in modification of the information in the database.
- 
-A new block is checked for errors, and if it is recognized as valid, it is sent to other Validating Nodes on the network. 
+节点在特定时刻有权生成新块（根据full_nodes参数），从队列中检索事务并将它们发送到块生成器。在形成新块的同时，执行对添加到该块中的事务的处理：将每个事务发送到虚拟机，该虚拟机执行具有参数的相应合同，在事务中传递，导致修改信息在数据库中。
+ 
+检查新块是否有错误，如果识别出有效，则将其发送到网络上的其他验证节点。
 
-Validating Nodes add this newly received block to the blocks queue. After having been validated, a new block is added to the blockchain, and the transactions in this block are processed, thus updating the database.
+验证节点将这个新接收的块添加到块队列中。经过验证后，新块将添加到区块链中，并处理该块中的事务，从而更新数据库。
 
-Block and Transaction Verification
+区块和交易验证
 ==========================
-The verification of a new block, carried out by a Validating Node after it has created a new block, and the verification of such block on all other Validating Nodes after they receive this block, includes the following checks:
+验证节点在验证节点创建新块之后执行验证，并在接收到该块之后验证所有其他验证节点上的块，包括以下检查：
 
-*	The first byte should be 0; if not, the received data is not considered a block
-*	Received block's generation timestamp should be before the current time
-*	The block's generation timestamp should correspond to the time interval when the Validating Node had the right to sign a new block
-*	The new block's number should be greater than that of the last block in the existing chain
-*	The total fee limit for transactions in the block should not be exceeded
-*	The block should be correctly signed with the key of the Node that created it; the following data should be signed: BlockID, Hash of the previous block, Time, Position in full_nodes, MrklRoot from all transactions in the block
-*	Each transaction in the block is checked for correctness in the following ways: 
-  
-  *	Each transaction's hash should be unique;
-  *	The limit of transaction signed with one key should not be exceeded (max_block_user_tx);
-  *	The transaction size should not be exceeded (max_tx_size);  
-  *	The time when the transaction was sent should not be greater than the time of the block formation and not less than the block formation time minus 86400 seconds;
-  *	Transactions should be correctly signed;
-  *	The tokens which are assigned to be used for payment of transaction fees should exist in the sys_currencies list;
-  *	The user who executed the contract should have a sufficient number of tokens in their account to pay for resources required for execution of the transaction.
+*第一个字节应该是0;如果不是，则接收到的数据不被视为块
+*接收块的生成时间戳应该在当前时间之前
+*块的生成时间戳应对应于验证节点有权签署新块的时间间隔
+*新块的编号应该大于现有链中最后一块的编号
+*不应超过该区块交易的总费用限额
+*该块应该使用创建它的节点的密钥正确签名;应对以下数据进行签名：BlockID，前一个块的散列值，Time，full_nodes中的位置，Block中所有事务的MrklRoot
+*通过以下方式检查块中的每个事务是否正确：
+  
+  *每个事务的散列应该是唯一的;
+  *不应超过使用一个密钥签名的事务限制（max_block_user_tx）;
+  *不应超过事务大小（max_tx_size）;
+  *交易发送的时间不应大于块形成时间并且不小于块形成时间减86400秒;
+  *交易应正确签署;
+  *分配用于支付交易费用的令牌应存在于sys_currencies列表中;
+  *执行合同的用户应该在其账户中拥有足够数量的代币以支付执行交易所需的资源。
 
-Platform's Database
+平台的数据库
 ==========================
-The platform's unified database, copies of which are stored and maintained up-to-date on every full node of the network, is used for storing large volumes of data (registers) and quick retrieval of data by contracts and interfaces. In the formation of a new block and its addition to the blockchain, all full nodes of the platform carry out a simultaneous update of database tables. Thus, the database stores the current (up-to-date) state of the blockchain, which ensures the equivalence of data on all full nodes and unambiguousness of contract execution on any Validating Node. When a new full node is added to the network, the up-to-date status of its database is reached by way of subsequent execution of all transactions recorded in the blocks of the blockchain. 
+该平台的统一数据库（其副本在网络的每个完整节点上存储并保持最新）用于存储大量数据（寄存器）以及通过合同和接口快速检索数据。 在形成一个新区块并将其添加到区块链中时，该平台的所有完整节点都会同时更新数据库表。 因此，数据库存储区块链的当前（最新）状态，确保所有完整节点上数据的等价性以及任何验证节点上合同执行的明确性。 当新的完整节点被添加到网络中时，其数据库的最新状态通过后续执行区块链中块中记录的所有交易来达到。
 
-Currently, the Genesis platform uses PostgreSQL as its database management system. 
+目前，Genesis平台使用PostgreSQL作为其数据库管理系统。 
 
 ********************************************************************************
-Platform's Ecosystems
+平台生态系统
 ********************************************************************************
-The data space of the Genesis platform is divided into many relatively independent clusters – *ecosystems*, in which the activities of the network's users are implemented. An Genesis ecosystem is an autonomous software environment that consists of a certain number of applications and users, who create these applications and work with them. Any holder of an Genesis account can create a new ecosystem.
+Genesis平台的数据空间被分成许多相对独立的群体 - *生态系统*，其中实现了网络用户的活动。 Genesis生态系统是一个自主软件环境，由一定数量的应用程序和用户组成，他们创建这些应用程序并与之一起工作。任何Genesis账户持有人都可以创建一个新的生态系统。
 
-The software basis of an ecosystem is a collection of applications, which are systems of interfaces, contracts, and database tables. The specific ecosystem to which application elements belong is indicated by prefixes in their name (for example, @1name), where the ecosystem's ID is indicated after the “@” sign. When addressing application elements within the current ecosystem, the prefix can be omitted. 
+生态系统的软件基础是一系列应用程序，它们是接口，合同和数据库表的系统。应用程序元素所属的特定生态系统由其名称中的前缀（例如，@ 1name）表示，其中生态系统的ID在“@”符号后面指示。在处理当前生态系统中的应用程序元素时，可以省略前缀。
 
-The Molis software client provides access to database management tools, contracts editor, interface editor, and other functions required for the creation of applications in an ecosystem, without resorting to any additional software modules. 
+Molis软件客户端可访问数据库管理工具，合同编辑器，界面编辑器以及在生态系统中创建应用程序所需的其他功能，而无需借助任何其他软件模块。
 
-A person can become a user of the Genesis platform only after receiving a private key for accessing one of the ecosystems (by default, ecosystem #1). A user can be a member of any number of ecosystems. Switching between ecosystems is carried out using a specialized menu of the software client.
+只有在收到访问其中一个生态系统的私钥（默认情况下，生态系统＃1）后，一个人才能成为Genesis平台的用户。用户可以是任何数量的生态系统的成员。生态系统之间的切换是通过软件客户端的专用菜单来进行的。
 
-Integrated Development Environment
+集成开发环境
 ==========================
-The Molis software client includes a full-scale integrated development environment (IDE) for creation of blockchain applications. Working with this IDE does not require the software developers to have profound knowledge of blockchain technology. The IDE is comprised of:
+Molis软件客户端包含用于创建区块链应用程序的全面集成开发环境（IDE）。使用此IDE不需要软件开发人员深入了解区块链技术。 IDE由以下部分组成：
 
--	Ecosystem parameters table,
--	Contracts editor, 
--	Database tables administration tools,
--	Interface editor and a visual interface designer,
--	Language resource editor,
--	Application import / export service.
+- 生态系统参数表，
+- 合同编辑，
+- 数据库表管理工具，
+- 界面编辑器和可视化界面设计器，
+- 语言资源编辑器，
+- 应用程序导入/导出服务。
 
-Applications on Genesis 
+应用于创世纪
 ==========================
-An application on the Genesis platform is a system of tables, contracts and interfaces with configured access rights. Such applications perform useful functions or implement various services. 
+Genesis平台上的应用程序是一个具有配置访问权限的表格，合同和界面系统。这种应用程序执行有用的功能或实现各种服务
 
-Each ecosystems creates its own set of tables for development of applications. This, however, does not exclude the possibility of accessing tables from other ecosystems by specifying those ecosystems' prefixes in table names. Tables are not in any way bound (nor belong) to specific contracts, and can be used by all applications. The permissions for entering data into tables are set by way of configuring the access rights. Specialized contracts – smart laws – can be used for rights management. 
+每个生态系统都为应用程序的开发创建了自己的一套表格。但是，这并不排除通过在表名中指定生态系统的前缀来访问来自其他生态系统的表格的可能性。表格不受任何方式的限制（也不属于）特定的合同，并且可以被所有应用程序使用。通过配置访问权限来设置将数据输入表格的权限。专业合同 - 聪明的法律 - 可以用于权利管理。
 
-It should be noted, that the design and creation of applications on Genesis does not require the software developers to know the structure of the network and its protocols, nor to understand the algorithm of blockchain formation and synchronization of databases on full nodes. Work in the Molis software client, including the creation of application elements, reading data from tables, execution of contracts and displaying results on the screen, looks and feels like operations with modules of a software environment on a local computer.
+应该指出的是，在Genesis上设计和创建应用程序并不需要软件开发人员知道网络及其协议的结构，也不需要了解在完整节点上区块链形成和数据库同步的算法。在Molis软件客户端工作，包括创建应用程序元素，从表中读取数据，执行合同并在屏幕上显示结果，外观和感觉与本地计算机上软件环境模块的操作相似。
 
-Ecosystem's Tables
+生态系统的表格
 ==========================
-An unlimited number of tables can be created for each ecosystem on the platform's database. As mentioned earlier, tables belonging to a specific ecosystem can be identified by a prefix that contains the ecosystem ID, which is not displayed in the software client while working within that specific ecosystem. Making records in tables of other ecosystem's tables is possible in cases where the access rights are configured to allow such actions.
+可以为平台数据库上的每个生态系统创建无限数量的表。如前所述，属于特定生态系统的表格可以通过包含生态系统ID的前缀来标识，该前缀在该特定生态系统中工作时不会显示在软件客户端中。在访问权限配置为允许执行此类操作的情况下，可以在其他生态系统的表格中制作记录。
 
-Tools for Tables Administration
+表管理工具
 --------------------------
-Tools for administration of an ecosystem's tables are available from the Tables menu of the administrative tools in the Molis software client. The following functions are implemented:
+用于管理生态系统表格的工具可以从Molis软件客户端的管理工具的表格菜单中获得。以下功能已实现：
 
-•	Viewing the list of tables and their contents, 
-•	Creation of new tables,
-•	Adding new table columns and specifying the data type in columns: Text, Date/Time, Varchar, Character, JSON, Number, Money, Double, Binary, 
-•	Management of permissions for entering data and changing the table structure.
+•查看表格及其内容列表，
+•创建新表格，
+•添加新的表列并在列中指定数据类型：文本，日期/时间，Varchar，字符，JSON，数字，金钱，双精度，二进制，
+•管理输入数据和更改表格结构的权限。
 
-Operations with Data in Tables
+数据在表中的操作
 --------------------------
-To organize the work with the database, the Simvolio contract language and the Protypo template language both have the DBFind function, which provides for retrieving values and data arrays from tables. The contract language has a function for adding rows to tables, DBInsert, and a function for changing values in existing entries, DBUpdate (when a value is changed, only the data in the database table is rewritten, whereas the blockchain is appended with a new transaction while preserving all previous transactions). Data in tables can be modified but not deleted.
+为了组织数据库的工作，Simvolio合同语言和Protypo模板语言都具有DBFind函数，该函数提供从表中检索值和数据数组。契约语言具有向表中添加行的功能DBInsert和用于更改现有条目中的值的函数DBUpdate（当值更改时，只有数据库表中的数据被重写，而区块链附加了新的交易，同时保留所有以前的交易）。表格中的数据可以修改但不能删除。
 
-In order to minimize the time of contracts execution, the DBFind functions cannot address more than one table at the same time, thus the requests with JOIN are not supported. That is why it is not advisable to normalize the application tables, but rather include all available information to the rows, thus duplicating data available in other tables. This, however, is not just a coercive measure, but a necessary requirement for blockchain applications, where what is saved (signed by a private key) should be a full, complete, up-to-date for a specific moment in time set of data (document), which cannot be modified due to the change of values in other tables (which is inevitable in relational databases).
+为了尽量减少执行合同的时间，DBFind函数不能同时处理多个表，因此不支持使用JOIN的请求。这就是为什么规范化应用程序表并不可取，而是在行中包含所有可用信息，从而复制其他表中可用的数据。然而，这不仅仅是一种强制措施，而且是区块链应用程序的必要条件，区块链应用程序保存的内容（由私钥签名）应该是一个完整的，完整的，及时的数据（文档），由于其他表中的值发生更改而无法修改（这在关系数据库中是不可避免的）。
 
-Ecosystem Parameters
+生态系统参数
 ==========================
-The ecosystem parameters are available for viewing and editing from the Ecosystem parameters section in the administrative tools of the Molis software client. Ecosystem parameters can be divided into the following groups:
+生态系统参数可以从Molis软件客户端管理工具中的生态系统参数部分查看和编辑。生态系统参数可以分为以下几组：
 
-•	General parameters: name of the ecosystem (ecosystem_name), its description (ecosystem_description), account of its founder (founder_account), and other information,
-•	Access parameters, which define exclusive rights to access application elements (changing_tables, changing_contracts, changing_page, changing_menu, changing_signature, changing_language)
-•	Technical parameters: for example, user stylesheets (stylesheet),
-•	User parameters of the ecosystem, where constants or lists (separated by commas), required for the work of applications are stored.
+•一般参数：生态系统名称（生态系统名称），其描述（ecos_description），其创建者账户（founder_account）以及其他信息，
+•访问参数，它定义访问应用程序元素的独占权限（changing_tables，changing_contracts，changing_page，changing_menu，changing_signature，changing_language）
+•技术参数：例如，用户样式表（样式表），
+•生态系统的用户参数，其中存储应用程序工作所需的常量或列表（用逗号分隔）。
 
-Rights to edit can be specified for every ecosystem's parameter.
+可以为每个生态系统的参数指定编辑权限。
 
-In order to retrieve values of certain ecosystem parameters, both the contracts language Simvolio and the template language Protypo have the EcosysParam function, where an ecosystem parameter name can be specified as an argument. To retrieve an element from a list (entered as an ecosystem parameter and separated by commas), you should specify you desired element's counting number as a second argument for the function. 
+为了检索某些生态系统参数的值，合同语言Simvolio和模板语言Protypo都具有EcosysParam函数，其中可以将生态系统参数名称指定为参数。要从列表中检索元素（作为生态系统参数输入并用逗号分隔），您应该指定所需元素的计数编号作为该函数的第二个参数。
 
-Parameters of the Platform Ecosystem
+平台生态系统的参数
 --------------------------
-All parameters of the Genesis blockchain platform are stored in the parameters table of the platform configuration ecosystem. These are the following parameters:
+Genesis区块链平台的所有参数都存储在平台配置生态系统的参数表中。这些是以下参数：
 
--	Time period for creation of a block by a Validating Node,
--	Source codes of pages, contracts, tables, and menus of new ecosystems,
--	List of validating nodes,
--	Maximum transaction and block sizes, and the maximum number of transactions in one block,
--	Maximum number of transactions sent by the same account in one block,
--	Maximum amount of Fuel spent on one transaction and one block,
--Fuel to APL exchange rate, and other parameters.
+- 由验证节点创建块的时间段，
+- 新生态系统的页面，合同，表格和菜单的源代码，
+- 验证节点列表，
+- 最大事务和块大小以及一个块中的最大事务数，
+- 一个块中同一账户发送的最大交易数量，
+- 一次交易和一个街区花费的最大燃料数量，
+- 燃料到APL汇率和其他参数。
 
-Managing the parameters of the platform configuration ecosystem on the program level is the same as managing the parameters of any other ecosystem. Unlike in other ecosystems, where all rights to manage ecosystem parameters belong to the ecosystem founder, changing the parameters of the platform configuration ecosystem can only be performed using the UpdSysContract contract, the management of which is defined in the platform's Legal System. Contracts (smart laws) of the Legal System are created before the network is launched and implement the rights and standards, stipulated in the “Platform's Legal System” section of the White Paper.  
+在程序级别管理平台配置生态系统的参数与管理任何其他生态系统的参数相同。与其他生态系统不同，管理生态系统参数的所有权利都属于生态系统创建者，因此只能使用UpdSysContract合同执行更改平台配置生态系统的参数，该合同的管理是在平台的法律系统中定义的。法律系统的合同（智能法律）在网络启动之前创建，并实施白皮书“平台法律系统”部分中规定的权利和标准。
 
-********************************************************************************
-Access Rights Control Mechanism 
-********************************************************************************
-Genesis has a multi-level access rights management system. Access rights can be configured to create and change any element of an application: contracts, database tables, interface pages, and ecosystem parameters. Permissions to change access rights can be configured as well.
+************************************************** ******************************
+访问权限控制机制
+************************************************** ******************************
+Genesis有一个多层次的访问权限管理系统。可以配置访问权限来创建和更改应用程序的任何元素：合同，数据库表，接口页面和生态系统参数。更改访问权限的权限也可以配置。
 
-By default, all rights in an Genesis ecosystem are managed by its founder (this is defined in the MainCondition contract, which every ecosystem has by default). However, after specialized smart laws are created, access rights control can be transferred to all ecosystem members or a group of such members.
+默认情况下，Genesis生态系统中的所有权利都由其创始人管理（这是在MainCondition合同中定义的，默认情况下每个生态系统都有此合同）。但是，在制定了专门的智能法律之后，访问权限控制可以转移给所有生态系统成员或一组这样的成员。
 
-Controlled Operations
+受控操作
 ==========================
-Permissions can be defined in the Permissions field of contracts, tables and interface (pages, menus, and page blocks) editors, available from the Molis administrative tools section. Permissions for the following operations can be configured:
+权限可以在合约，表格和界面（页面，菜单和页面块）编辑器的权限字段中定义，可从Molis管理工具部分获得。可以配置以下操作的权限：
 
-1.	Table column permission – permission to change values in the table column,
-2.	Table Insert permission – permission to add a new row to the table,
-3.	Table New Column permission – permission to add a new column,
-4.	Conditions for changing of Table permissions – permission to change rights, listed in items 1-3,
-5.	Conditions for change smart contract – permission to edit the smart contract,
-6.	Conditions for change page – permission to edit the interface page,
-7.	Conditions for change menu – permission to edit the menu,
-8.	Conditions for change of ecosystem parameters – permission to change a certain parameter in the ecosystem configuration table.
+1.表列权限 - 更改表列中值的权限，
+2.表格插入权限 - 将新行添加到表格的权限，
+3.表新列权限 - 添加新列的权限，
+4.更改表权限的条件 - 权限更改权限，列在项目1-3中，
+5.变更智能合约的条件 - 编辑智能合约的权限，
+6.更改页面的条件 - 编辑界面页面的权限，
+7.更改菜单的条件 - 编辑菜单的权限，
+8.改变生态系统参数的条件 - 允许改变生态系统配置表中的某个参数。
 
-Ways to Manage Permissions
+管理权限的方法
 ==========================
-Rules, that define the access rights, should be entered in the *Permissions* fields as arbitrary expressions in Simvolio language. Access will be granted in the event that at the moment of request the expression was true. If the *Permissions* field is left blank, it is automatically set to *false*, and the execution of related actions is blocked.
+规定访问权限的规则应作为Simvolio语言中的任意表达式输入* Permissions *域。如果在请求时表达式是真实的，那么访问将被授予。如果* Permissions *字段留空，则会自动设置为* false *，并阻止执行相关操作。
 
-The easiest way to define permissions is to enter a logical (boolean) expression in the *Permissions* field. For example, $member == 2263109859890200332, where the ID of a certain ecosystem member is given. 
+定义权限的最简单方法是在*权限*字段中输入逻辑（布尔）表达式。例如，$ member == 2263109859890200332，其中给出了某个生态系统成员的ID。
 
-The most versatile and recommended method for defining permissions is the use of the *ContractConditions* function, to which a contract name can be passed as a parameter. This contract should include the conditions, in which formulation of the table values (for example, user roles tables) and ecosystem parameters can be used. 
+用于定义权限的最通用和推荐的方法是使用* ContractConditions *函数，可以将合同名称作为参数传递给该函数。该合同应包括可以使用表格值（例如，用户角色表格）和生态系统参数的表述的条件。
 
-Another method of permissions management is the use of the ContractAccess function. The list of contracts that are eligible to implement a corresponding action can be passed to the ContractAccess function as parameters. For example, if we take the table that lists the accounts in the ecosystem's tokens, and put ``ContractAccess(“TokenTransfer”)`` function in the *Permissions* field of the amount column, then the operation of changing the values in the amount column will be allowed only to the *TokenTransfer* contract (all contracts that perform token transfer operations between accounts, will be able to perform such operations only by calling the *TokenTransfer* contract). Conditions for accessing the contracts themselves can be managed in the conditions section. They can be rather complex and can include many other contracts.
+另一种权限管理方法是使用ContractAccess功能。有资格执行相应操作的合约列表可以作为参数传递给ContractAccess函数。例如，如果我们采用列出生态系统标记中的帐户的表格，并将“ContractAccess（”TokenTransfer“）”功能放入金额列的*权限*字段中，则可以通过更改金额列仅允许用于* TokenTransfer *合约（所有在账户之间执行令牌转移操作的合约，只能通过调用* TokenTransfer *合约才能执行此类操作）。访问合同本身的条件可以在条件部分进行管理。它们可能相当复杂，可能包含许多其他合同。
 
-Exclusive Rights
+专有权利
 ==========================
-To resolve conflict situations or those critical for the operation of an ecosystem, the Ecosystem parameters table has a number of special parameters (*changing_smart_contracts, changing_tables, changing_pages*), where the conditions for obtaining exclusive rights to access any smart contracts, tables and pages are defined. These rights are set using special smart contracts, for example, executing a voting of ecosystem members or requesting the availability of a number of signatures of different user roles.
+为了解决冲突情况或对生态系统运作至关重要的情况，生态系统参数表中有许多特殊参数（* changing_smart_contracts，changing_tables，changing_pages *），其中获取访问任何智能合同，表格和页面的独占权限的条件被定义。这些权利是使用特殊的智能合约来设定的，例如，执行生态系统成员的投票或要求提供不同用户角色的许多签名。
 
-********************************************************************************
-Virtual Dedicated Ecosystems
-********************************************************************************
+************************************************** ******************************
+虚拟专用生态系统
+************************************************** ******************************
 
-Genesis allows for creation of Virtual Dedicated Ecosystems (VDE), which have the full set of functions of standard ecosystems, but work outside the blockchain. In VDE full-scale applications can be created using the contract and template languages, database tables and other software client functions. Contracts from blockchain ecosystems can be called using API.
+Genesis允许创建虚拟专用生态系统（Virtual Dedicated Ecosystems，VDE），它具有标准生态系统的全部功能，但可以在区块链之外工作。在VDE全面应用程序中可以使用合同和模板语言，数据库表和其他软件客户端功能创建。可以使用API​​调用区块链生态系统的合同。
 
-Requests to Web-Resources
+请求Web资源
 ==========================
-The main difference between VDE and standard ecosystems is the possibility to make requests from its contracts to any web-resources via HTTP/HTTPS using the HTTPRequest function. Arguments passed to this function should be: URL, request method (GET or POST), header, and request parameters.
+VDE和标准生态系统之间的主要区别在于可以使用HTTPRequest功能通过HTTP / HTTPS向合约请求任何Web资源。传递给这个函数的参数应该是：URL，请求方法（GET或POST），头部和请求参数。
 
-Rights to Read Data 
+阅读数据的权利
 ==========================
-Since data in VDE are not saved to the blockchain (which, however, is available for reading), they have an option to configure rights to read tables. Read rights can be set for separate columns, and for any rows using a special contract.
+由于VDE中的数据未保存到区块链（但可供读取），因此它们可以选择配置读取表的权限。可以为单独的列设置读取权限，也可以为使用特殊合同的任何行设置读取权限。
 
-Using VDE
+使用VDE
 ==========================
-VDE can be used for the creation of registration forms and sending verification information to users’ emails or phones, storing data out of public access, and writing and testing the work of applications with their further export and import to blockchain ecosystems. Also, in VDE you can schedule contract execution, which allows for the creation of oracles, which are used for receiving data from the web and sending it to the blockchain.
+VDE可用于创建注册表单，并将验证信息发送至用户的电子邮件或电话，将数据存储在公共访问之外，以及编写和测试应用程序的工作，并将其进一步导出并导入区块链生态系统。此外，在VDE中，您可以安排契约执行，这允许创建用于从网络接收数据并将其发送到区块链的oracles。
 
-Creating a VDE
+创建一个VDE
 ==========================
-VDE can be created on any full node on the network. Node Administrator defines the list of ecosystems that are allowed to use the functions of dedicated ecosystems, and assigns a user who will have the rights of the ecosystem founder and will be able to: install applications, accept new members to the ecosystem, and configure access rights to the ecosystem's resources.
+VDE可以在网络上的任何完整节点上创建。节点管理员定义允许使用专用生态系统功能的生态系统列表，并分配拥有生态系统创建者权限的用户，并能够：安装应用程序，接受生态系统的新成员以及配置访问权限生态系统资源的权利。
 
